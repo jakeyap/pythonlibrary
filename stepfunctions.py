@@ -2,7 +2,7 @@
 """
 Created on Wed Apr 17 10:44:15 2019
 Commonly used functions on step waveforms
-@author: yyongkeo
+@author: yyk
 """
 
 def risetime1090 (time, waveform, startpt = 0):
