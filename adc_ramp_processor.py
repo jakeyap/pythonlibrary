@@ -34,7 +34,7 @@ def extract_ramp(directory, filename, ignore_row=0, ignore_col=0):
     
    largest_output = max(outputs)
    num_bits = int(np.ceil(np.log2(largest_output)))
-    
+   print('Number of bits is '+str(round(num_bits,3)))
    buckets = []
    counts = []
    
@@ -67,6 +67,7 @@ def plot_histogram(buckets, counts, name='histogram'):
    # need to set the range well
    average_count = sum(counts[1:-1])
    average_count = average_count / (len(counts)-2)
+   print('Average count is '+str(round(average_count,3)))
    plt.title(name)
    plt.plot(buckets, counts)
    plt.ylabel('Counts')
@@ -89,6 +90,8 @@ def plot_ramp(inputs, outputs, name='ramp'):
 def calculate_dnl_inl_histogram(buckets, counts):
    '''
    This function calculates the DNL
+   returns a dictionary 
+   {'inl': inl, 'dnl': dnl}
    '''
    # calculate average step size
    avg_counts = sum(counts[1:-1]) # exclude lowest & highest codes
@@ -112,6 +115,7 @@ def calculate_dnl_inl_histogram(buckets, counts):
 def plot_inl(buckets, inl, name='INL'):
    plt.title(name)
    plt.plot(buckets, inl)
+   plt.ylim([-4,4])
    plt.ylabel('LSB')
    plt.xlabel('Codes')
    plt.grid(True)
@@ -119,19 +123,24 @@ def plot_inl(buckets, inl, name='INL'):
 def plot_dnl(buckets, dnl, name='DNL'):
    plt.title(name)
    plt.plot(buckets, dnl)
-   plt.ylim([-2,2])
+   plt.ylim([-1,1])
    plt.ylabel('LSB')
    plt.xlabel('Codes')
    plt.grid(True)
 
 def eval_adc(directory, filename):
    cache = extract_ramp(directory, filename)
-   plt.figure()
+   plt.figure(figsize=(12,9))
+   #figManager = plt.get_current_fig_manager()
+   #figManager.window.showMaximized()
+   plt.suptitle(filename)
    plt.subplot(2,2,1)
-   plot_histogram(cache['buckets'], cache['counts'])
-   plt.subplot(2,2,2)
    plot_ramp(cache['inputs'],cache['outputs'])
+   plt.subplot(2,2,2)
+   plot_histogram(cache['buckets'], cache['counts'])
    plt.subplot(2,2,3)
    plot_dnl(cache['buckets'], cache['dnl'])
    plt.subplot(2,2,4)
    plot_inl(cache['buckets'], cache['inl'])
+   
+   plt.show()
